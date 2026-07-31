@@ -38,7 +38,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto p-6 space-y-8 text-gray-900">
+    <main className="max-w-8xl mx-auto p-6 space-y-8 text-gray-900">
       {/* 상단 헤더 & 네비게이션 */}
       <div className="flex justify-between items-center border-b pb-4">
         <div>

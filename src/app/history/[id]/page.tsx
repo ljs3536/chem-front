@@ -20,6 +20,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import Molecule2D from "@/components/Molecule2D";
 
 export default function DetailXaiPage() {
   const params = useParams();
@@ -74,7 +75,7 @@ export default function DetailXaiPage() {
   }));
 
   return (
-    <main className="max-w-5xl mx-auto p-6 space-y-8 text-gray-900">
+    <main className="max-w-8xl mx-auto p-6 space-y-8 text-gray-900">
       {/* 헤더 네비게이션 */}
       <div className="flex justify-between items-center border-b pb-4">
         <div>
@@ -94,8 +95,8 @@ export default function DetailXaiPage() {
         </Link>
       </div>
 
-      {/* 1. 기본 분석 정보 카드 */}
-      <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-2">
+      {/* 1. 기본 분석 정보 카드 영역 내부 */}
+      <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
         <div className="flex justify-between items-center border-b pb-2">
           <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
             분석 ID #{detail.history_id}
@@ -105,9 +106,24 @@ export default function DetailXaiPage() {
             `) | {new Date(detail.created_at).toLocaleString("ko-KR")}
           </span>
         </div>
-        <p className="text-sm font-mono bg-gray-50 p-3 rounded-lg border border-gray-200 break-all text-gray-800">
-          <strong>분석 SMILES:</strong> {detail.smiles}
-        </p>
+
+        {/* 🧪 SMILES 및 2D 분자 구조식 나란히 보기 Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+          <div className="md:col-span-2 space-y-2">
+            <p className="text-xs font-semibold text-gray-500">
+              분석 SMILES 문자열
+            </p>
+            <p className="text-sm font-mono bg-gray-50 p-3 rounded-lg border border-gray-200 break-all text-gray-800">
+              {detail.smiles}
+            </p>
+          </div>
+          <div className="flex flex-col items-center space-y-1">
+            <p className="text-xs font-semibold text-gray-500">
+              2D 분자 구조식 (RDKit)
+            </p>
+            <Molecule2D smiles={detail.smiles} width={220} height={140} />
+          </div>
+        </div>
       </div>
 
       {/* 2. SMILES 원자/문자별 독성 위험 기여도 히트맵 (공통 XAI Attribution) */}

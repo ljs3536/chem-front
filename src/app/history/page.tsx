@@ -39,7 +39,7 @@ export default function HistoryPage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto p-6 space-y-6 text-gray-900">
+    <main className="max-w-8xl mx-auto p-6 space-y-6 text-gray-900">
       <div className="flex justify-between items-center border-b pb-4">
         <div>
           <h1 className="text-2xl font-bold text-white">
