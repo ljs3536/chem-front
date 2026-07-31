@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { getComparisonHistory, HistoryComparisonItem } from "@/lib/api";
 import Link from "next/link";
@@ -20,7 +20,6 @@ const TASKS = [
   "SR-p53",
 ];
 
-// 항목별 비교 시각적 색상 매핑
 const COLOR_PALETTE = [
   {
     bg: "bg-blue-500",
@@ -48,14 +47,18 @@ const COLOR_PALETTE = [
   },
 ];
 
-export default function ComparePage() {
+// 💡 1. useSearchParams를 사용하는 실제 내용부를 별도 컴포넌트로 분리
+function CompareContent() {
   const searchParams = useSearchParams();
   const idsParam = searchParams.get("ids");
   const [items, setItems] = useState<HistoryComparisonItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!idsParam) return;
+    if (!idsParam) {
+      setLoading(false);
+      return;
+    }
     const ids = idsParam
       .split(",")
       .map((x) => parseInt(x, 10))
@@ -74,7 +77,7 @@ export default function ComparePage() {
           <h1 className="text-2xl font-bold text-white">
             📊 AI 예측 이력 정밀 비교 대시보드
           </h1>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-400">
             선택된 분자 구조들의 12대 독성 지표 상대적 비교 분석
           </p>
         </div>
@@ -87,7 +90,7 @@ export default function ComparePage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-gray-400">
           비교 데이터를 분석하는 중...
         </div>
       ) : items.length === 0 ? (
@@ -178,5 +181,20 @@ export default function ComparePage() {
         </div>
       )}
     </main>
+  );
+}
+
+// 💡 2. 최상위 내보내기 페이지 컴포넌트에서는 Suspense로 감싸기만 수행
+export default function ComparePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-5xl mx-auto p-12 text-center text-gray-400">
+          페이지를 로딩하는 중...
+        </div>
+      }
+    >
+      <CompareContent />
+    </Suspense>
   );
 }

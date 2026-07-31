@@ -1,5 +1,5 @@
 # 1. Build Stage
-FROM node:21-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ ENV NEXT_PUBLIC_API_BASE_URL=http://localhost:8001
 RUN npm run build
 
 # 2. Runner Stage (최종 실행 이미지)
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
